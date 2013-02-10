@@ -6,6 +6,10 @@ import com.sun.media.sound.FFT;
 
 import sun.misc.IOUtils;
 
+import java.util.*;
+
+import java.sql.SQLException;
+
 public class Main {
 
 	/**
@@ -13,13 +17,12 @@ public class Main {
 	 * @throws IOException 
 	 * @throws InterruptedException 
 	 */
-	public static void main(String[] args) throws IOException, InterruptedException {
+	public static void main(String[] args) throws IOException, InterruptedException, SQLException {
 		ProcessBuilder pb = new ProcessBuilder("/home/daniel/code/prog3");
 		
 		//pb.redirectErrorStream(true);
 		
-		ServiceManager sm = new ServiceManager();
-		
+		ServiceManager sm = new ServiceManager();	
         try {
             Process p = pb.start();
             String s;
@@ -38,49 +41,7 @@ public class Main {
          } catch (Exception ex) {
             ex.printStackTrace();
         }
-	
 	}
-		/** // try to start the c program and access the stdout
-		Process p;
-		 InputStream inS = null;
-		try {
-			p = new ProcessBuilder("/home/daniel/code/prog3").redirectOutput(destination)
-			
-			// p = Runtime.getRuntime().exec("/home/daniel/code/prog3");
-			Thread.sleep(1000);
-			inS = p.getInputStream();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
-		System.out.println("barcode reader started");
-		
-		System.out.println("inS Available: " + inS.available());
-		
-		//StringWriter stw = new StringWriter();
-		InputStreamReader isr = new InputStreamReader(inS);
-		BufferedReader br = new BufferedReader(isr);
-		
-		String line = "";
-		
-		while (line == "") {
-			try {
-				System.out.println("R");
-				System.out.println(br.read());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.println("recived: " + line);
-		}
-		
-		System.out.println("recived line");
-		
-		System.out.println("recived: " + line);
-		//String theString = writer.toString();
-	}*/
+
 
 }
