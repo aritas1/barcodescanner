@@ -1,0 +1,6 @@
+#SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="05fe", ATTRS{idProduct}=="1010", MODE="0666", PROGRAM="/bin/sh -c #'echo -n $id:1.0 >/sys/bus/usb/drivers/usbhid/unbind;\
+#echo -n $id:1.1 >/sys/bus/usb/drivers/usbhid/unbind'", SYMLINK+="scannerx"
+
+# PROGRAM="/bin/sh -c 'logger -p user.info Hey, I see a new device $env{BUSNUM} $env{DEVNUM}'", RUN+="/bin/sh -c ''", NAME="misc/%k", SYMLINK+="%k", MODE="0666"
+
+ACTION=="add", ATTRS{idVendor}=="05fe", ATTRS{idProduct}=="1010", NAME="barcodescanner",RUN+="/usr/bin/logger Gerät angeschlossen: $name"
