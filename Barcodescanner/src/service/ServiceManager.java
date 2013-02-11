@@ -3,12 +3,14 @@ package service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import communicate.InfoBeamer;
+
 import sale.Product;
 import sale.SaleManager;
 
 public class ServiceManager {
 
-	public static final String constOkay = "Okay";
+	public static final String constOkay = "Okaz";
 	public static final String constCancel = "Cancel";
 	public static final String constBack = "Back";
 	
@@ -26,6 +28,10 @@ public class ServiceManager {
 	
 	private ArrayList<sale.User> userList = new ArrayList<>();
 	private ArrayList<sale.Product> productList = new ArrayList<>();
+	
+	InfoBeamer ib = new InfoBeamer();
+	
+	int price = 0;
 	
 	public void changeState(String s) throws SQLException
 	{
@@ -46,6 +52,10 @@ public class ServiceManager {
 		productList.clear();
 		userList.clear();
 		saleState = saleStates.name;
+		price = 0;
+		
+		ib.resetAll();
+		
 		System.out.println("reset to initial state");		
 	}
 	
@@ -56,6 +66,7 @@ public class ServiceManager {
 			if(sale.User.isValidUser(s)) {
 				System.out.println(s +" was a valid user");
 				userList.add(sale.User.getUserByName(s));
+				ib.addUser(s);
 				break;
 			} else if(sale.Product.isValidProduct(s) && userList.size() != 0)
 			{
@@ -65,6 +76,7 @@ public class ServiceManager {
 			else if (s.equals(constBack)) {
 				if (userList.size() > 0) {
 					userList.remove(userList.size() - 1);
+					ib.userBack();
 				}
 				break;
 			}
@@ -79,7 +91,11 @@ public class ServiceManager {
 		case product:
 			if(sale.Product.isValidProduct(s)) {
 				System.out.println(s +" was a vaild product");
-				productList.add(sale.Product.getProductByName(s));
+				sale.Product p = sale.Product.getProductByName(s);
+				productList.add(p);
+				price += p.getPrice();
+				ib.addOrder(p.getName());
+				ib.setOrderPrice(price);
 			} 
 			else if(sale.User.isValidUser(s)) {
 				System.out.println("Try to book a user as a product, not valid: WIXXAAA");
@@ -87,8 +103,12 @@ public class ServiceManager {
 			} 
 			else if (s.equals(constBack)) {
 				if (productList.size() > 0) {
+					Product p = productList.get(productList.size()-1);
+					price -= p.getPrice();
 					productList.remove(productList.size() - 1);
-				}
+					ib.orderBack();
+					ib.setOrderPrice(price);
+					}
 				if (productList.size() == 0) {
 					saleState = saleStates.name;
 					System.out.println("Change state back to name");
@@ -103,9 +123,7 @@ public class ServiceManager {
 				// dump the order into the database
 				SaleManager.sale(userList, productList);
 				
-				productList.clear();
-				userList.clear();
-				saleState = saleStates.name;				
+				reset();
 			} else {
 				System.out.println(s + " is an unknown barcode");
 			}
