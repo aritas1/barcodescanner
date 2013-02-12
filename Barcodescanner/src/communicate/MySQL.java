@@ -8,10 +8,12 @@ import java.sql.Statement;
 
 public class MySQL {
 
-   private String Username = "d0165428";
-   private String Password = "hWCBVzgvVgBNQu2J";
+   private String Username = "barcodescanner";
+   private String Password = "8jv7aw7Qe4Mh4Yha";
    private String Driver = "com.mysql.jdbc.Driver";
-   private String URL = "jdbc:mysql://dd19828.kasserver.com/d0165428";
+   private String Host = "192.168.1.111";
+   private String DBName = "barcodescanner";
+   private String URL = "jdbc:mysql://"+Host+"/"+DBName;
    private Connection connection;
 
    public MySQL() {

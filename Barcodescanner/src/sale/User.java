@@ -8,6 +8,11 @@ import communicate.MySQL;
 public class User {
 	
 	private String username;
+	
+	public String getUsername() {
+		return username;
+	}
+
 	private int id;
 	
 	public User(String username, int id)

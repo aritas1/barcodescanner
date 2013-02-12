@@ -1,7 +1,11 @@
 package service;
 
+import java.security.Timestamp;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+
+import javax.crypto.SealedObject;
 
 import communicate.InfoBeamer;
 
@@ -11,7 +15,7 @@ import sale.SaleManager;
 public class ServiceManager {
 
 	public static final String constOkay = "Okaz";
-	public static final String constCancel = "Cancel";
+	public static final String constCancel = "Canc";
 	public static final String constBack = "Back";
 	
 	
@@ -26,6 +30,8 @@ public class ServiceManager {
 	private globalState state = globalState.sale;
 	private saleStates saleState = saleStates.name;
 	
+	long timeChangeDisplayLast = 0; //System.currentTimeMillis();
+	
 	private ArrayList<sale.User> userList = new ArrayList<>();
 	private ArrayList<sale.Product> productList = new ArrayList<>();
 	
@@ -33,8 +39,32 @@ public class ServiceManager {
 	
 	int price = 0;
 	
+	public ServiceManager() {
+		Observer o = new Observer(ib, this);
+		o.start();
+	}
+	
+	public void checkSale() {
+		if(saleState == saleStates.name) {
+			reset();
+		} else if (saleState == saleState.product) {
+			try {
+				SaleManager.sale(userList, productList);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ib.displayNormal();
+			reset();
+		}
+	}
+	
 	public void changeState(String s) throws SQLException
 	{
+		ib.displayScanner();
+		//timeChangeDisplayLast = System.currentTimeMillis();
+		ib.setTimeToChangeDisplayBack(System.currentTimeMillis() + (1000*20));
+		
 		switch (state) {
 		case sale:
 			changeStateSale(s);
@@ -65,8 +95,9 @@ public class ServiceManager {
 		case name:
 			if(sale.User.isValidUser(s)) {
 				System.out.println(s +" was a valid user");
-				userList.add(sale.User.getUserByName(s));
-				ib.addUser(s);
+				sale.User u = sale.User.getUserByName(s);
+				userList.add(u);
+				ib.addUser(u.getUsername());
 				break;
 			} else if(sale.Product.isValidProduct(s) && userList.size() != 0)
 			{
@@ -123,6 +154,7 @@ public class ServiceManager {
 				// dump the order into the database
 				SaleManager.sale(userList, productList);
 				
+				ib.displayNormal();
 				reset();
 			} else {
 				System.out.println(s + " is an unknown barcode");

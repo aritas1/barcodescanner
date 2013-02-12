@@ -9,14 +9,47 @@ public class InfoBeamer {
 	// echo "barcodebeamer/scanner/userAdd:Daniel" | nc -u localhost 4444
 
 	
-	private String host = "localhost";
+	private String host = "192.168.1.111";
     private int port = 4444;
-	private String nodeCode = "barcodebeamer/scanner/";
+	private String nodeCode = "kitchen_cycler/barcodebeamer/scanner/";
+	
+	long timeChangeDisplayLast = 0; //System.currentTimeMillis();
+	long timeToChangeDisplayBack = 0; //System.currentTimeMillis();
+	
+	public long getTimeToChangeDisplayBack() {
+		return timeToChangeDisplayBack;
+	}
+
+
+	public void setTimeToChangeDisplayBack(long timeToChangeDisplayBack) {
+		this.timeToChangeDisplayBack = timeToChangeDisplayBack;
+	}
+
+
+	public boolean checkDisplaySwitchBack() {
+		if(timeToChangeDisplayBack != 0 && timeToChangeDisplayBack <= System.currentTimeMillis()) {
+			displayNormal();
+			return true;
+		}
+		return false;
+	}
 	
 	
 	public InfoBeamer()
 	{
 		resetAll();
+	}
+	
+	public void displayScanner()
+	{
+		//kitchen_cycler/interrupt/tonode:barcodebeamer
+		sendMessage("kitchen_cycler/interrupt/tonode:barcodebeamer");
+	}
+	
+	public void displayNormal()
+	{
+		//kitchen_cycler/interrupt/tonode:barcodebeamer
+		sendMessage("kitchen_cycler/interrupt/clear:");
 	}
 	
 	public void addUser(String name)
