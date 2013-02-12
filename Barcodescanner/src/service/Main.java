@@ -19,12 +19,17 @@ public class Main {
 	 */
 	public static void main(String[] args) throws IOException, InterruptedException, SQLException {
 		
+		if(args.length != 2) {
+			System.out.println("Usage: java service.Main /path/to/cFile cFileName");
+			System.exit(0);
+		}
+		
 		// clean up running processes
-		ProcessBuilder pb2 = new ProcessBuilder("killall", "prog3");
+		ProcessBuilder pb2 = new ProcessBuilder("killall", args[1]);
 		pb2.start();
 		
 		
-		ProcessBuilder pb = new ProcessBuilder("/home/daniel/code/prog3");
+		ProcessBuilder pb = new ProcessBuilder(args[0]+ args[1]);
 		
 		//pb.redirectErrorStream(true);
 		
