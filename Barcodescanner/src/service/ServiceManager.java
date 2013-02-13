@@ -42,19 +42,23 @@ public class ServiceManager {
 	public ServiceManager() {
 		Observer o = new Observer(ib, this);
 		o.start();
+		ib.displayNormal();
 	}
 	
 	public void checkSale() {
+		System.out.println("Checking sale");
 		if(saleState == saleStates.name) {
 			reset();
 		} else if (saleState == saleState.product) {
+			System.out.println("Someone has failed to scan ok, book his items");
 			try {
 				SaleManager.sale(userList, productList);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			ib.displayNormal();
+			// wait 3 sec befor change back
+			ib.setTimeToChangeDisplayBack(System.currentTimeMillis() + 3000);
 			reset();
 		}
 	}
@@ -112,7 +116,9 @@ public class ServiceManager {
 				break;
 			}
 			else if (s.equals(constCancel)) {
-				reset();	
+				reset();
+				// change display back after 3 sec
+				ib.setTimeToChangeDisplayBack(System.currentTimeMillis() + 3000);
 				break;
 			}
 			else {
@@ -147,6 +153,8 @@ public class ServiceManager {
 			}
 			else if (s.equals(constCancel)) {
 				reset();
+				// set the display back after 3 sec
+				ib.setTimeToChangeDisplayBack(System.currentTimeMillis() + 3000);
 			}
 			else if (s.equals(constOkay)) { 
 				//TODO: change that to OK or something like that
@@ -154,7 +162,7 @@ public class ServiceManager {
 				// dump the order into the database
 				SaleManager.sale(userList, productList);
 				
-				ib.displayNormal();
+				ib.setTimeToChangeDisplayBack(System.currentTimeMillis() + 3000);
 				reset();
 			} else {
 				System.out.println(s + " is an unknown barcode");

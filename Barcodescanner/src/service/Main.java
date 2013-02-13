@@ -23,7 +23,7 @@ public class Main {
 			System.out.println("Usage: java service.Main /path/to/cFile cFileName");
 			System.exit(0);
 		}
-		
+	
 		// clean up running processes
 		ProcessBuilder pb2 = new ProcessBuilder("killall", args[1]);
 		pb2.start();
