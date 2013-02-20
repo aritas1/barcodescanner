@@ -111,7 +111,7 @@ public class InfoBeamer {
 		      // Create a datagram socket, send the packet through it, close it.
 		      DatagramSocket dsocket = new DatagramSocket();
 		      
-		      System.out.println("Send message: " + messageIn);
+		      //System.out.println("Send message: " + messageIn);
 		      
 		      dsocket.send(packet);
 		      dsocket.close();

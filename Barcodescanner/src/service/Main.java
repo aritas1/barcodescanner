@@ -32,28 +32,36 @@ public class Main {
 		ProcessBuilder pb = new ProcessBuilder(args[0]+ args[1]);
 		
 		//pb.redirectErrorStream(true);
-		
+		String s;
+		ServiceManager sm = new ServiceManager();
+		Process p = pb.start();
+		ProcMon pm = ProcMon.create(p);
+		BufferedReader stdout;
 		while (true) {		
-			ServiceManager sm = new ServiceManager();	
+				
 	        try {
-	            Process p = pb.start();
-	            String s;
-	            BufferedReader stdout = new BufferedReader (
+	        	if (pm.isComplete()) {
+		            p = pb.start();
+	        	}
+	            
+	            stdout = new BufferedReader (
 	                new InputStreamReader(p.getInputStream()));
 	            
 	            while ((s = stdout.readLine()) != null) {
-	                System.out.println(s);
+	                //System.out.println(s);
 	                sm.changeState(s);
 	            }
 	            
-	            System.out.println("Exit value: " + p.waitFor());
+	            //System.out.println("Exit value: " + p.waitFor());
 	            p.getInputStream().close();
 	            p.getOutputStream().close();
 	            p.getErrorStream().close();
+	            stdout.close();
+	            //p.destroy();
 	         } catch (Exception ex) {
 	            ex.printStackTrace();
 	        }
-	        System.out.println("Program ended, try to restart and read values. Is the scanner connected?");
+	        //System.out.println("Program ended, try to restart and read values. Is the scanner connected?");
 	    	Thread.sleep(2000);
 		}
 	}
